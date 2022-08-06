@@ -2,10 +2,6 @@
 
 source auto-arch/cfg
 
-pacman -S --needed --noconfirm archlinux-keyring
-pacman -S --needed --noconfirm pacman-contrib
-setfont ter-v16b
-
 timezone_and_localization() {
   echo -e "\nSETTING TIMEZONE AND LOCALIZATION..." && sleep 3
   # timezone
@@ -33,39 +29,46 @@ set_hostname() {
   } >/etc/hosts
 }
 
+#microcode_reload() { 
+#}
+
 download_packages() {
   echo -e "\nDOWNLOADING MAIN PACMAN PACKAGES..." && sleep 3
   sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
   sed -i 's/^#Color/Color/' /etc/pacman.conf
   #sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+  pacman -S --needed --noconfirm archlinux-keyring
+  pacman -S --needed --noconfirm pacman-contrib
 
   chmod +r /etc/pacman.d/mirrorlist
   reflector -c Italy -a24 -n5 -f5 -l5 --sort rate --save /etc/pacman.d/mirrorlist
 
   pacman -S --needed --noconfirm git efibootmgr grub grub-btrfs os-prober mtools dosfstools gvfs gvfs-smb nfs-utils ntfs-3g \
     reflector rsync networkmanager network-manager-applet iw wireless_tools wpa_supplicant dialog nftables firewalld openssh keychain nss-mdns \
-    bluez bluez-utils wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware \
-    cups{,-pdf} cron bash-completion pkgstats arch-wiki-lite tlp acpid acpi acpi_call \
+    wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware \
+    cups{,-pdf} cron bash-completion pkgstats arch-wiki-lite auto-cpufreq acpid acpi acpi_call \
     alsa-{utils,plugins,firmware} pamixer pipewire{,-alsa,-pulse,-jack} xdg-{user-dirs,utils} \
     neovim alacritty exa firefox rclone ripgrep tree # immediate utility
+    # bluez bluez-utils
 }
 
 btrfs_mkinitcpio() {
   echo -e "\nRUNNING mkinitcpio..." && sleep 3
   # MODULES=() ---> MODULES=(btrfs)
   sed -i 's/MODULES=()/MODULES=(btrfs)/' /etc/mkinitcpio.conf
-  # HOOKS=(... filesystems ...) ---> HOOKS=(... encrypt filesystems ...)
-  # fsck
+  # HOOKS=(... filesystems fsck) ---> HOOKS=(... encrypt filesystems)
+  # no fsck for a btrfs root
   sed -i 's/HOOKS=(.\+)/HOOKS=(base udev block autodetect keyboard keymap modconf encrypt filesystems)/' /etc/mkinitcpio.conf
   mkinitcpio -P
 }
 
 install_bootloader() {
   echo -e "\nINSTALLING BOOTLOADER (GRUB)..." && sleep 3
-  grub-install --recheck --target=x86_64-efi --efi-directory=/boot --bootloader-id="Arch Linux" "$DISK" && grub-mkconfig -o /boot/grub/grub.cfg
+  grub-install --target=i386-pc --boot-directory=/boot "$DISK"
+  grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot --recheck --removable "$DISK"
   # LUKS root: GRUB_CMDLINE_LINUX_DEFAULT="... cryptdevice=UUID=$rootUUID:cryptroot root=/dev/mapper/cryptroot"
-  rootUUID="$(blkid -s UUID -o value "${DISK}2")"
-  sed -i "s/^#\?GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT=\"cryptdevice=UUID=$rootUUID:cryptroot root=\/dev\/mapper\/cryptroot rootfstype=btrfs quiet splash\"/" /etc/default/grub
+  rootUUID="$(blkid -s UUID -o value "${DISK}3")"
+  sed -i "s/^#\?GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT=\"cryptdevice=UUID=$rootUUID:cryptroot root=\/dev\/mapper\/cryptroot rootfstype=btrfs quiet splash vt.handoff=7\"/" /etc/default/grub
   unset rootUUID
   sed -i 's/^#\?GRUB_DISABLE_OS_PROBER=.*/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
   grub-mkconfig -o /boot/grub/grub.cfg
@@ -73,15 +76,15 @@ install_bootloader() {
 
 enable_services() {
   echo -e "\nENABLING SYSTEM SERVICES..." && sleep 3
-  systemctl enable reflector.timer
-  systemctl enable fstrim.timer
-  systemctl enable NetworkManager
+  # systemctl enable fstrim.timer # replaced by discard=async
   systemctl enable acpid
-  systemctl enable tlp
+  systemctl enabled auto-cpufreq
   systemctl enable avahi-daemon
-  systemctl enable firewalld
-  systemctl enable sshd
   systemctl enable cups
+  systemctl enable firewalld
+  systemctl enable NetworkManager
+  systemctl enable reflector.timer
+  systemctl enable sshd
 }
 
 add_user() {
