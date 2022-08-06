@@ -61,23 +61,25 @@ save_config() {
 
 partition_disk() {
   echo -e "\nZAPPING & PARTITIONING DISK..." && sleep 3
-  sgdisk -Z "$DISK"                    # zap all
-  sgdisk -g -a 2048 -o "$DISK"         # try to convert to GPT if MBR found, and align (SSD)
-  sgdisk -n 1::+550M -t 1:ef00 "$DISK" # ESP (/dev/sda1)
-  sgdisk -n 2:: "$DISK"                # root (/dev/sda2)
+  sgdisk -Z "$DISK"                                                 # zap GPT & MBR
+  sgdisk -og "$DISK"                                                # partition tables: create GPT with protective MBR
+  sgdisk -n 1::+1M -t 1:ef02 -c 1:"BIOS Boot Partition" "$DISK"     # /dev/sda1. BIOS, For GPT with GRUB
+  sgdisk -n 2::+550M -t 2:ef00 -c 2:"EFI System Partition" "$DISK"  # /dev/sda2. ESP, for UEFI
+  sgdisk -n 3::+30G -c 3:"Linux filesystem" "$DISK"                 # /dev/sda3. /
+  sgdisk -n 4:: -c 4:"Linux filesystem" "$DISK"                     # /dev/sda4. /home
 }
 
 encrypt_root() {
   echo -e "\nENCRYPTING ROOT..." && sleep 3
-  modprobe dm_crypt
   echo "$LUKS_PASSPHRASE" | cryptsetup -qv --type luks1 --cipher aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --use-urandom \
-    luksFormat "${DISK}2"
+    luksFormat "${DISK}3" /etc/luks_passphrase
 }
 
 format_disk() {
   echo -e "\nFORMATTING DISK..." && sleep 3
-  mkfs.vfat -F32 -n ESP "${DISK}1"
-  echo "$LUKS_PASSPHRASE" | cryptsetup luksOpen "${DISK}2" cryptroot
+  mkfs.vfat -F32 -n ESP "${DISK}2"
+  
+  echo "$LUKS_PASSPHRASE" | cryptsetup luksOpen "${DISK}3" cryptroot
   mkfs.btrfs -L CRYPTROOT /dev/mapper/cryptroot
   unset LUKS_PASSPHRASE
 }
@@ -120,7 +122,7 @@ btrfs_setup() {
 
   # mount ESP on /mnt/boot
   mkdir -p /mnt/boot
-  mount "${DISK}1" /mnt/boot
+  mount "${DISK}2" /mnt/boot
 }
 
 pacstrap_base() {
