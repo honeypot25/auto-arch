@@ -31,14 +31,14 @@ save_config() {
   read -rp "Enter the hostname: " MY_HOSTNAME
 
   # LUKS_PASSPHRASE
-  read -rsp "Enter the LUKS passphrase for ${DISK}2: " LUKS_PASSPHRASE
+  read -rsp "Enter the LUKS passphrase for ${DISK}3: " LUKS_PASSPHRASE
   echo
-  read -rsp "Re-enter the LUKS passphrase for ${DISK}2: " LUKS_PASSPHRASE_CHECK
+  read -rsp "Re-enter the LUKS passphrase for ${DISK}3: " LUKS_PASSPHRASE_CHECK
   echo
   while [[ "$LUKS_PASSPHRASE" != "$LUKS_PASSPHRASE_CHECK" ]]; do
-    read -rsp "Sorry, passphrase do not match. Enter the LUKS passphrase for ${DISK}2: " LUKS_PASSPHRASE
+    read -rsp "Sorry, passphrase do not match. Enter the LUKS passphrase for ${DISK}3: " LUKS_PASSPHRASE
     echo
-    read -rsp "Re-enter the LUKS passphrase for ${DISK}2: " LUKS_PASSPHRASE_CHECK
+    read -rsp "Re-enter the LUKS passphrase for ${DISK}3: " LUKS_PASSPHRASE_CHECK
     echo
   done
   unset LUKS_PASSPHRASE_CHECK
@@ -63,22 +63,22 @@ partition_disk() {
   echo -e "\nZAPPING & PARTITIONING DISK..." && sleep 3
   sgdisk -Z "$DISK"                                                 # zap GPT & MBR
   sgdisk -og "$DISK"                                                # partition tables: create GPT with protective MBR
-  sgdisk -n 1::+1M -t 1:ef02 -c 1:"BIOS Boot Partition" "$DISK"     # /dev/sda1. BIOS, For GPT with GRUB
+  sgdisk -n 1::+1M -t 1:ef02 -c 1:"BIOS Boot Partition" "$DISK"     # /dev/sda1. BIOS, For GPT with GRUB (Legacy)
   sgdisk -n 2::+550M -t 2:ef00 -c 2:"EFI System Partition" "$DISK"  # /dev/sda2. ESP, for UEFI
-  sgdisk -n 3::+30G -c 3:"Linux filesystem" "$DISK"                 # /dev/sda3. /
-  sgdisk -n 4:: -c 4:"Linux filesystem" "$DISK"                     # /dev/sda4. /home
+  sgdisk -n 3:: -c 3:"Linux filesystem" "$DISK"                     # /dev/sda3. CRYPTROOT
 }
 
 encrypt_root() {
   echo -e "\nENCRYPTING ROOT..." && sleep 3
   echo "$LUKS_PASSPHRASE" | cryptsetup -qv --type luks1 --cipher aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --use-urandom \
-    luksFormat "${DISK}3" /etc/luks_passphrase
+    luksFormat "${DISK}3" # luks1 for GRUB compatibility
 }
 
 format_disk() {
   echo -e "\nFORMATTING DISK..." && sleep 3
+  # ESP
   mkfs.vfat -F32 -n ESP "${DISK}2"
-  
+  # CRYPTROOT
   echo "$LUKS_PASSPHRASE" | cryptsetup luksOpen "${DISK}3" cryptroot
   mkfs.btrfs -L CRYPTROOT /dev/mapper/cryptroot
   unset LUKS_PASSPHRASE
@@ -89,17 +89,15 @@ btrfs_setup() {
   subvols=(
     "@"
     "@home"
+    "@opt"
     "@var"
-    "@tmp"
-    "@.snapshots"
   )
 
   paths=(
     "/"
     "/home"
+    "/opt"
     "/var"
-    "/tmp"
-    "/.snapshots"
   )
   # Mount root
   mount /dev/mapper/cryptroot /mnt
@@ -116,7 +114,7 @@ btrfs_setup() {
   # Remount root with subvolumes
   for i in ${!subvols[*]}; do
     mkdir -p "/mnt${paths[$i]}"
-    mount -o noatime,nodiratime,space_cache=v2,compress=zstd,ssd,discard=async,subvol="${subvols[$i]}" \
+    mount -o noatime,nodiratime,space_cache=v2,compress=lzo:6,ssd,discard=async,subvol="${subvols[$i]}" \
       /dev/mapper/cryptroot "/mnt${paths[$i]}"
   done
 
@@ -128,7 +126,8 @@ btrfs_setup() {
 pacstrap_base() {
   echo -e "\nINSTALLING BASE PACKAGES..." && sleep 3
   pacstrap /mnt --needed base base-devel linux linux-firmware linux-headers \
-    intel-ucode btrfs-progs git nano parted cryptsetup dhcpcd man-db man-pages
+    intel-ucode btrfs-progs git nano
+    # parted cryptsetup dhcpcd man-db man-pages
 }
 
 save_config
