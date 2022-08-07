@@ -126,8 +126,7 @@ btrfs_setup() {
 pacstrap_base() {
   echo -e "\nINSTALLING BASE PACKAGES..." && sleep 3
   pacstrap /mnt --needed base base-devel linux linux-firmware linux-headers \
-    intel-ucode btrfs-progs git nano
-    # parted cryptsetup dhcpcd man-db man-pages
+    intel-ucode btrfs-progs git nano dhcpcd man-db man-pages
 }
 
 save_config
