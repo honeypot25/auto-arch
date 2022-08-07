@@ -16,7 +16,7 @@ timezone_and_localization() {
   localectl set-keymap it
   # clock
   timedatectl set-ntp 1
-  timedatectl set-local-rtc 1
+  timedatectl set-local-rtc 0
 }
 
 set_hostname() {
@@ -45,7 +45,7 @@ download_packages() {
 
   pacman -S --needed --noconfirm git efibootmgr grub grub-btrfs os-prober mtools dosfstools gvfs gvfs-smb nfs-utils ntfs-3g \
     reflector rsync networkmanager network-manager-applet iw wireless_tools wpa_supplicant dialog nftables firewalld openssh keychain nss-mdns \
-    wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware \
+    wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware lsof \
     cups{,-pdf} cron bash-completion pkgstats arch-wiki-lite auto-cpufreq acpid acpi acpi_call \
     alsa-{utils,plugins,firmware} pamixer pipewire{,-alsa,-pulse,-jack} xdg-{user-dirs,utils} \
     neovim alacritty exa firefox rclone ripgrep tree # immediate utility
@@ -82,6 +82,7 @@ enable_services() {
   systemctl enable avahi-daemon
   systemctl enable cups
   systemctl enable firewalld
+  systemctl enable mpd
   systemctl enable NetworkManager
   systemctl enable reflector.timer
   systemctl enable sshd
