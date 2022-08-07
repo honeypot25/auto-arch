@@ -60,7 +60,7 @@ save_config() {
 }
 
 partition_disk() {
-  echo -e "\nZAPPING & PARTITIONING DISK..." && sleep 3
+  echo -e "\nZAPPING & PARTITIONING DISK..." && sleep 2
   sgdisk -Z "$DISK"                                                 # zap GPT & MBR
   sgdisk -og "$DISK"                                                # partition tables: create GPT with protective MBR
   sgdisk -n 1::+1M -t 1:ef02 -c 1:"BIOS Boot Partition" "$DISK"     # /dev/sda1. BIOS, For GPT with GRUB (Legacy)
@@ -69,13 +69,13 @@ partition_disk() {
 }
 
 encrypt_root() {
-  echo -e "\nENCRYPTING ROOT..." && sleep 3
+  echo -e "\nENCRYPTING ROOT..." && sleep 2
   echo "$LUKS_PASSPHRASE" | cryptsetup -qv --type luks1 --cipher aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --use-urandom \
     luksFormat "${DISK}3" # luks1 for GRUB compatibility
 }
 
 format_disk() {
-  echo -e "\nFORMATTING DISK..." && sleep 3
+  echo -e "\nFORMATTING DISK..." && sleep 2
   # ESP
   mkfs.vfat -F32 -n ESP "${DISK}2"
   # CRYPTROOT
@@ -85,7 +85,7 @@ format_disk() {
 }
 
 btrfs_setup() {
-  echo -e "\nSETTING UP BTRFS..." && sleep 3
+  echo -e "\nSETTING UP BTRFS..." && sleep 2
   subvols=(
     "@"
     "@home"
@@ -124,7 +124,7 @@ btrfs_setup() {
 }
 
 pacstrap_base() {
-  echo -e "\nINSTALLING BASE PACKAGES..." && sleep 3
+  echo -e "\nINSTALLING BASE PACKAGES..." && sleep 2
   pacstrap /mnt --needed base base-devel linux linux-firmware linux-headers \
     intel-ucode btrfs-progs git nano dhcpcd man-db man-pages
 }
@@ -136,8 +136,8 @@ format_disk
 btrfs_setup
 pacstrap_base
 
-echo -e "\nGENERATING FSTAB..." && sleep 3
+echo -e "\nGENERATING FSTAB..." && sleep 2
 genfstab -U /mnt >>/mnt/etc/fstab
 
-echo -e "\nCOPYING REPO..." && sleep 3
+echo -e "\nCOPYING REPO..." && sleep 2
 cp -R "$STARTDIR/" /mnt/

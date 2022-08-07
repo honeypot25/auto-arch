@@ -2,9 +2,9 @@
 
 # using ()
 install_dotfiles() (
-  echo -e "\nSETTING ~/.dotfiles GIT BARE REPO..." && sleep 3
+  echo -e "\nSETTING ~/.dotfiles GIT BARE REPO..." && sleep 2
   pushd ~ || return
-  git clone --bare https://github.com/honeypot25/dotfiles.git .dotfiles
+  git clone --bare git@github.com:honeypot25/.dotfiles.git
   # set temp git alias. As a nested function, using {}
   dots() {
     /usr/bin/git --git-dir="$HOME/.dotfiles" --work-tree="$HOME" "$@"
@@ -18,9 +18,6 @@ install_dotfiles() (
   # now checkout
   dots checkout && echo -e "Checked out config\n"
   dots config --local status.showUntrackedFiles no
-  # make scripts executable
-  # chmod u+x .bin/*
-  # chmod u+x .system_setup.sh
   echo -e "\n~/.dotfiles ready!"
   popd || return # $PWD
 )

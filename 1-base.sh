@@ -3,7 +3,7 @@
 source auto-arch/cfg
 
 timezone_and_localization() {
-  echo -e "\nSETTING TIMEZONE AND LOCALIZATION..." && sleep 3
+  echo -e "\nSETTING TIMEZONE AND LOCALIZATION..." && sleep 2
   # timezone
   timedatectl set-timezone "Europe/Rome"
   ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
@@ -20,7 +20,7 @@ timezone_and_localization() {
 }
 
 set_hostname() {
-  echo -e "\nSETTING HOSTNAMES..." && sleep 3
+  echo -e "\nSETTING HOSTNAMES..." && sleep 2
   echo "$MY_HOSTNAME" >/etc/hostname
   {
     echo "127.0.0.1   localhost"
@@ -33,7 +33,7 @@ set_hostname() {
 #}
 
 download_packages() {
-  echo -e "\nDOWNLOADING MAIN PACMAN PACKAGES..." && sleep 3
+  echo -e "\nDOWNLOADING MAIN PACMAN PACKAGES..." && sleep 2
   sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
   sed -i 's/^#Color/Color/' /etc/pacman.conf
   #sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
@@ -53,7 +53,7 @@ download_packages() {
 }
 
 btrfs_mkinitcpio() {
-  echo -e "\nRUNNING mkinitcpio..." && sleep 3
+  echo -e "\nRUNNING mkinitcpio..." && sleep 2
   # MODULES=() ---> MODULES=(btrfs)
   sed -i 's/MODULES=()/MODULES=(btrfs)/' /etc/mkinitcpio.conf
   # HOOKS=(... filesystems fsck) ---> HOOKS=(... encrypt filesystems)
@@ -63,7 +63,7 @@ btrfs_mkinitcpio() {
 }
 
 install_bootloader() {
-  echo -e "\nINSTALLING BOOTLOADER (GRUB)..." && sleep 3
+  echo -e "\nINSTALLING BOOTLOADER (GRUB)..." && sleep 2
   grub-install --target=i386-pc --boot-directory=/boot "$DISK"
   grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot --recheck --removable "$DISK"
   # LUKS root: GRUB_CMDLINE_LINUX_DEFAULT="... cryptdevice=UUID=$rootUUID:cryptroot root=/dev/mapper/cryptroot"
@@ -75,7 +75,7 @@ install_bootloader() {
 }
 
 enable_services() {
-  echo -e "\nENABLING SYSTEM SERVICES..." && sleep 3
+  echo -e "\nENABLING SYSTEM SERVICES..." && sleep 2
   # systemctl enable fstrim.timer # replaced by discard=async
   systemctl enable acpid
   systemctl enabled auto-cpufreq
@@ -89,7 +89,7 @@ enable_services() {
 }
 
 add_user() {
-  echo -e "\nADDING USER..." && sleep 3
+  echo -e "\nADDING USER..." && sleep 2
   useradd -m -G wheel -s /bin/bash "$MY_USERNAME"
   echo "$MY_USERNAME:$PASSWORD" | chpasswd
   # enable sudo rights
@@ -109,7 +109,7 @@ install_bootloader
 enable_services
 add_user
 
-echo -e "\nCOPYING REPO..." && sleep 3
+echo -e "\nCOPYING REPO..." && sleep 2
 cp -R auto-arch/ "home/$MY_USERNAME/"
 chown -R "$MY_USERNAME": "home/$MY_USERNAME/auto-arch/"
 
