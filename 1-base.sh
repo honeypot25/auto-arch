@@ -47,9 +47,10 @@ download_packages() {
     reflector rsync networkmanager network-manager-applet iw wireless_tools wpa_supplicant dialog nftables firewalld openssh keychain nss-mdns \
     wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware lsof \
     cups{,-pdf} cron bash-completion pkgstats arch-wiki-lite auto-cpufreq acpid acpi acpi_call \
-    alsa-{utils,plugins,firmware} pamixer pipewire{,-alsa,-pulse,-jack} playerctl xdg-{user-dirs,utils} \
+    pipewire{,-alsa,-pulse,-jack} pamixer playerctl xdg-{user-dirs,utils} \
     neovim alacritty exa firefox rclone ripgrep tree # immediate utility
     # bluez bluez-utils
+    # alsa-{utils,plugins,firmware}
 }
 
 btrfs_mkinitcpio() {
