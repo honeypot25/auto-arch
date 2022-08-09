@@ -8,7 +8,7 @@ lightdm_pkgs=("lightdm" "lightdm-slick-greeter" "lightdm-settings" "light-locker
 sddm_pkgs=("sddm" "qt5-graphicaleffects" "qt5-quickcontrols2" "qt5-svg")
 
 ### X11 ###
-x11_pkgs=("xorg-server" "xf86-video-intel" "xf86-input-libinput" "xdotool" "xorg-xinput" "xorg-xrandr" "arandr" "xidlehook" "light")
+x11_pkgs=("xorg-server" "xf86-video-intel" "xf86-input-libinput" "xdotool" "xorg-xinput" "xorg-xrandr" "xorg-xrdb" "arandr" "xidlehook" "light")
 
 ### Wayland ###
 wayland_pkgs=("wayland" "xorg-server-xwayland" "xdg-desktop-portal-wlr" "wlogout" "wl-randr")
@@ -18,7 +18,7 @@ pkgs=("timeshift" "timeshift-autosnap" "upower" "dunst" "catfish" "btop" "gparte
   "ttf-hack" "ttf-iosevka-nerd" "ttf-roboto" "ttf-roboto-mono" "qt5ct" "papirus-icon-theme" "noto-fonts" "noto-fonts-cjk" "noto-fonts-emoji" "noto-fonts-extra" # "lxappearence"
   "picom" "fastfetch" "cava" "ranger" "nemo" "zathura" "lolcat" "flameshot" "obs-studio" "mpv" "mpd" "ncmpcpp"                                                           # "inkscape" "tenacity-git"
   "openresolv" "speedtest-cli" "telegram-desktop" "bitwarden" "ddgr" "discord_arch_electron" "zoom" "spotify" "realvnc-vnc-viewer" "youtube-dl"
-  "vscodium-bin" "vscodium-bin-features" "vscodium-bin-marketplace" "github-desktop" "sqlite" # "mysql-workbench" "pgadmin4" "postgresql"
+  "code" "github-desktop" "sqlite" # "mysql-workbench" "pgadmin4" "postgresql"
 )
 
 ### GUI-specific ###
