@@ -8,7 +8,7 @@ lightdm_pkgs=("lightdm" "lightdm-slick-greeter" "lightdm-settings" "light-locker
 sddm_pkgs=("sddm" "qt5-graphicaleffects" "qt5-quickcontrols2" "qt5-svg")
 
 ### X11 ###
-x11_pkgs=("xorg-server" "xf86-video-intel" "xf86-input-libinput" "xdotool" "xorg-xinput" "xorg-xrandr" "xorg-xrdb" "arandr" "xidlehook" "light")
+x11_pkgs=("xorg-server" "xf86-video-intel" "xf86-input-libinput" "xdotool" "xorg-xinput" "xorg-xrandr" "xorg-xrdb" "arandr" "xidlehook" "xss-lock" "light")
 
 ### Wayland ###
 wayland_pkgs=("wayland" "xorg-server-xwayland" "xdg-desktop-portal-wlr" "wlogout" "wl-randr")
