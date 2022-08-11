@@ -29,15 +29,17 @@ set_hostname() {
   } >/etc/hosts
 }
 
-#microcode_reload() { 
+#microcode_reload() {
 #}
 
 download_packages() {
   echo -e "\nDOWNLOADING MAIN PACMAN PACKAGES..." && sleep 2
+  sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
   sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
   sed -i 's/^#Color/Color/' /etc/pacman.conf
-  #sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
   pacman -S --needed --noconfirm archlinux-keyring
+
+  # relaod 
   pacman -S --needed --noconfirm pacman-contrib
 
   chmod +r /etc/pacman.d/mirrorlist
@@ -49,8 +51,8 @@ download_packages() {
     cups{,-pdf} gutenprint foomatic-db-gutenprint-ppds system-config-printer cron bash-completion pkgstats arch-wiki-lite auto-cpufreq tlp acpid acpi acpi_call \
     pipewire{,-alsa,-pulse,-jack} pamixer playerctl xdg-{user-dirs,utils} \
     neovim alacritty exa firefox rclone ripgrep tree # immediate utility
-    # bluez bluez-utils
-    # alsa-{utils,plugins,firmware}
+  # bluez bluez-utils
+  # alsa-{utils,plugins,firmware}
 }
 
 btrfs_mkinitcpio() {
