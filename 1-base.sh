@@ -84,7 +84,6 @@ enable_services() {
   systemctl enable avahi-daemon
   systemctl enable cups
   systemctl enable firewalld
-  systemctl enable mpd
   systemctl enable NetworkManager
   systemctl enable reflector.timer
   systemctl enable sshd
