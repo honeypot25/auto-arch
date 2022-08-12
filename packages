@@ -17,7 +17,8 @@ wayland_pkgs=("wayland" "xorg-server-xwayland" "xdg-desktop-portal-wlr" "wlogout
 pkgs=("timeshift" "timeshift-autosnap" "upower" "dunst" "catfish" "btop" "gparted" "grub-customizer" "stacer" "tlpui" "xdg-ninja"
   "ttf-hack" "ttf-iosevka-nerd" "ttf-roboto" "ttf-roboto-mono" "qt5ct" "papirus-icon-theme" "noto-fonts" "noto-fonts-cjk" "noto-fonts-emoji" "noto-fonts-extra" # "lxappearence"
   "picom" "fastfetch" "cava" "ranger" "nemo" "zathura" "zathura-pdf-mupdf" "lolcat" "flameshot" "obs-studio" "mpv" "mpd" "ncmpcpp"                              # "inkscape" "tenacity-git"
-  "openresolv" "speedtest-cli" "telegram-desktop" "bitwarden" "ddgr" "discord_arch_electron" "zoom" "spotify" "realvnc-vnc-viewer" "youtube-dl"
+  "neovim" "alacritty" "exa" "rclone" "ripgrep" "tree" "p7zip" "p7zip-gui"
+  "openresolv" "speedtest-cli" "firefox" "telegram-desktop" "bitwarden" "ddgr" "discord_arch_electron" "zoom" "spotify" "realvnc-vnc-viewer" "youtube-dl"
   "code" "github-desktop" "sqlite" # "mysql-workbench" "pgadmin4" "postgresql"
 )
 
