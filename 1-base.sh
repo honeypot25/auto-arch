@@ -49,7 +49,7 @@ download_packages() {
     reflector rsync rclone networkmanager network-manager-applet iw wireless_tools wpa_supplicant dialog nftables firewalld openssh keychain nss-mdns \
     wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware lsof \
     cups{,-pdf} gutenprint foomatic-db-gutenprint-ppds system-config-printer cron bash-completion pkgstats arch-wiki-lite auto-cpufreq tlp acpid acpi acpi_call \
-    pipewire{,-alsa,-pulse,-jack} pamixer playerctl xdg-{user-dirs,utils}
+    pipewire{,-alsa,-pulse,-jack} pamixer xdg-{user-dirs,utils}
   # bluez bluez-utils
   # alsa-{utils,plugins,firmware}
 }

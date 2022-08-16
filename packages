@@ -8,7 +8,7 @@ lightdm_pkgs=("lightdm" "lightdm-slick-greeter" "lightdm-settings" "light-locker
 sddm_pkgs=("sddm" "qt5-graphicaleffects" "qt5-quickcontrols2" "qt5-svg")
 
 ### X11 ###
-x11_pkgs=("xorg-server" "xf86-video-intel" "xf86-input-libinput" "xdotool" "xorg-xinput" "xorg-xrandr" "xorg-xrdb" "arandr" "xidlehook" "xss-lock" "light")
+x11_pkgs=("xorg-server" "xf86-video-intel" "xf86-input-libinput" "xdotool" "xorg-xinput" "xorg-xrandr" "xorg-xrdb" "arandr" "xidlehook" "xss-lock" "light" "xclip")
 
 ### Wayland ###
 wayland_pkgs=("wayland" "xorg-server-xwayland" "xdg-desktop-portal-wlr" "wlogout" "wl-randr")
@@ -16,8 +16,8 @@ wayland_pkgs=("wayland" "xorg-server-xwayland" "xdg-desktop-portal-wlr" "wlogout
 ### Packages ###
 pkgs=("timeshift" "timeshift-autosnap" "upower" "dunst" "catfish" "btop" "gparted" "grub-customizer" "stacer" "tlpui" "xdg-ninja" "imager-bin"
   "ttf-hack" "ttf-iosevka-nerd" "ttf-roboto" "ttf-roboto-mono" "qt5ct" "papirus-icon-theme" "noto-fonts" "noto-fonts-cjk" "noto-fonts-emoji" "noto-fonts-extra" # "lxappearence"
-  "picom" "fastfetch" "cava" "ranger" "nemo" "zathura" "zathura-pdf-mupdf" "lolcat" "flameshot" "obs-studio" "mpv" "mpd" "wildmidi" "ncmpcpp" # "inkscape" "tenacity-git"
-  "neovim" "alacritty" "exa" "rclone" "ripgrep" "tree" "p7zip" "p7zip-gui"
+  "picom" "fastfetch" "cava" "ranger" "nemo" "zathura" "zathura-pdf-mupdf" "lolcat" "flameshot" "obs-studio" "mpv" "mpd" "ncmpcpp" "mpc" # "inkscape" "tenacity-git"
+  "neovim" "alacritty" "exa" "rclone" "ripgrep" "tree" "p7zip" "p7zip-gui" "perl-rename"
   "openresolv" "speedtest-cli" "firefox" "telegram-desktop" "bitwarden" "ddgr" "discord_arch_electron" "zoom" "spotify" "realvnc-vnc-viewer" "youtube-dl"
   "code" "github-desktop" "oh-my-git" "sqlite" # "mysql-workbench" "pgadmin4" "postgresql"
 )
