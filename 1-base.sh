@@ -39,14 +39,12 @@ download_packages() {
   sed -i 's/^#Color/Color/' /etc/pacman.conf
   pacman -S --needed --noconfirm archlinux-keyring
 
-  # relaod 
   pacman -S --needed --noconfirm pacman-contrib
-
   chmod +r /etc/pacman.d/mirrorlist
   reflector -c Italy -a24 -n5 -f5 -l5 --sort rate --save /etc/pacman.d/mirrorlist
 
   pacman -S --needed --noconfirm git efibootmgr grub grub-btrfs os-prober mtools dosfstools gvfs gvfs-smb nfs-utils ntfs-3g \
-    reflector rsync rclone networkmanager network-manager-applet iw wireless_tools wpa_supplicant dhcpcd dialog nftables firewalld openssh keychain nss-mdns \
+    rsync rclone networkmanager network-manager-applet iw wireless_tools wpa_supplicant dhcpcd dialog nftables firewalld openssh keychain nss-mdns \
     wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware lsof \
     cups{,-pdf} gutenprint foomatic-db-gutenprint-ppds system-config-printer cron bash-completion pkgstats arch-wiki-lite auto-cpufreq tlp acpid acpi acpi_call \
     pipewire{,-alsa,-pulse,-jack} pamixer xdg-{user-dirs,utils}
