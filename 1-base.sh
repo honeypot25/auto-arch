@@ -47,7 +47,8 @@ download_packages() {
     rsync rclone networkmanager network-manager-applet iw wireless_tools wpa_supplicant dhcpcd dialog nftables firewalld openssh keychain nss-mdns \
     wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware lsof \
     cups{,-pdf} gutenprint foomatic-db-gutenprint-ppds system-config-printer cron bash-completion pkgstats arch-wiki-lite auto-cpufreq tlp acpid acpi acpi_call \
-    pipewire{,-alsa,-pulse,-jack} pamixer xdg-{user-dirs,utils}
+    pipewire{,-alsa,-pulse,-jack} pamixer xdg-{user-dirs,utils} pavucontrol \
+    zip unzip
   # bluez bluez-utils
   # alsa-{utils,plugins,firmware}
 }

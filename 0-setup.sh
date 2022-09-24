@@ -61,11 +61,11 @@ save_config() {
 
 partition_disk() {
   echo -e "\nZAPPING & PARTITIONING DISK..." && sleep 2
-  sgdisk -Z "$DISK"                                                 # zap GPT & MBR
-  sgdisk -og "$DISK"                                                # partition tables: create GPT with protective MBR
-  sgdisk -n 1::+1M -t 1:ef02 -c 1:"BIOS Boot Partition" "$DISK"     # /dev/sda1. BIOS, For GPT with GRUB (Legacy)
-  sgdisk -n 2::+550M -t 2:ef00 -c 2:"EFI System Partition" "$DISK"  # /dev/sda2. ESP, for UEFI
-  sgdisk -n 3:: -c 3:"Linux filesystem" "$DISK"                     # /dev/sda3. CRYPTROOT
+  sgdisk -Z "$DISK"                                                # zap GPT & MBR
+  sgdisk -og "$DISK"                                               # partition tables: create GPT with protective MBR
+  sgdisk -n 1::+1M -t 1:ef02 -c 1:"BIOS Boot Partition" "$DISK"    # /dev/sda1. BIOS, For GPT with GRUB (Legacy)
+  sgdisk -n 2::+550M -t 2:ef00 -c 2:"EFI System Partition" "$DISK" # /dev/sda2. ESP, for UEFI
+  sgdisk -n 3:: -c 3:"Linux filesystem" "$DISK"                    # /dev/sda3. CRYPTROOT
 }
 
 encrypt_root() {
@@ -126,7 +126,7 @@ btrfs_setup() {
 pacstrap_base() {
   echo -e "\nINSTALLING BASE PACKAGES..." && sleep 2
   pacstrap /mnt --needed base base-devel linux linux-firmware linux-headers \
-    intel-ucode btrfs-progs git nano dhcpcd man-db man-pages
+    intel-ucode btrfs-progs git vi nano dhcpcd man-db man-pages
 }
 
 save_config
