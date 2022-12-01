@@ -14,12 +14,13 @@ x11_pkgs=("xorg-server" "xf86-video-intel" "xf86-input-libinput" "xdotool" "xorg
 wayland_pkgs=("wayland" "xorg-server-xwayland" "xdg-desktop-portal-wlr" "wlogout" "wl-randr") # "discord_arch_electron_wayland"
 
 ### Packages ###
-pkgs=("timeshift" "timeshift-autosnap" "upower" "dunst" "catfish" "gparted" "grub-customizer" "stacer" "tlpui" "xdg-ninja" "imager-bin"
+pkgs=("timeshift" "timeshift-autosnap" "upower" "dunst" "catfish" "gparted" "grub-customizer" "stacer" "tlpui" "xdg-ninja" "imager-bin" "bleachbit"
   "ttf-hack" "ttf-iosevka-nerd" "ttf-roboto" "ttf-roboto-mono" "qt5ct" "papirus-icon-theme"                                                                                                    # "lxappearence"
-  "picom" "neofetch" "cava" "ranger" "nemo" "nemo-terminal" "nemo-fileroller" "zathura" "zathura-pdf-mupdf" "flameshot" "obs-studio" "mpv" "mpd" "mpDris2" "playerctl" "ncmpcpp" "zscroll-git" # "pdfarranger" "pdfshuffler" "inkscape" "tenacity-git"
-  "neovim" "alacritty" "exa" "rclone" "ripgrep" "tree" "perl-rename"
+  "picom" "neofetch" "cava" "ranger" "nemo" "nemo-terminal" "nemo-fileroller" "zathura" "zathura-pdf-mupdf" "libmupdf" "tabbed" "flameshot" "obs-studio" "mpv" "mpd" "mpDris2" "playerctl" "ncmpcpp" "zscroll-git" # "pdfarranger" "pdfshuffler" "inkscape" "tenacity-git"
+  "tldr" "neovim" "neovim-remote" "alacritty" "exa" "rclone" "ripgrep" "tree" "perl-rename"
   "openresolv" "speedtest-cli" "firefox" "telegram-desktop" "bitwarden" "ddgr" "discord" "zoom" "spotify" "youtube-dl" # "realvnc-vnc-viewer"
-  "code" "github-desktop" "oh-my-git" "sqlite"                                                                                       # "mysql-workbench" "pgadmin4" "postgresql"
+  "code" "oh-my-git" "sqlite"                                                                                       # "mysql-workbench" "pgadmin4" "postgresql" "github-desktop" "gvfs-google" "gnome-control-center"
+  # "texlive-core" "texlive-latexextra" "texlive-bibtexextra"
 )
 
 ### GUI-specific ###
