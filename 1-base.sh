@@ -41,7 +41,7 @@ download_packages() {
 
   pacman -S --needed --noconfirm pacman-contrib
   chmod +r /etc/pacman.d/mirrorlist
-  reflector -c Italy -a24 -n5 -f5 -l5 --sort rate --save /etc/pacman.d/mirrorlist
+  #reflector -c Italy -a24 -n5 -f5 -l5 --sort rate --save /etc/pacman.d/mirrorlist
 
   pacman -S --needed --noconfirm git efibootmgr grub grub-btrfs os-prober mtools dosfstools gvfs gvfs-smb nfs-utils ntfs-3g \
     rsync rclone networkmanager network-manager-applet iw wireless_tools wpa_supplicant dhcpcd dialog nftables firewalld openssh keychain nss-mdns \
