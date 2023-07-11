@@ -79,7 +79,7 @@ enable_services() {
   echo -e "\nENABLING SYSTEM SERVICES..." && sleep 2
   # systemctl enable fstrim.timer # replaced by discard=async
   systemctl enable acpid
-  systemctl enabled auto-cpufreq
+  systemctl enable auto-cpufreq
   systemctl enable avahi-daemon
   systemctl enable cups
   systemctl enable dhcpcd
