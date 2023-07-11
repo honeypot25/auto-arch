@@ -80,7 +80,7 @@ format_disk() {
   mkfs.vfat -F32 -n ESP "${DISK}2"
   # CRYPTROOT
   echo "$LUKS_PASSPHRASE" | cryptsetup luksOpen "${DISK}3" cryptroot
-  mkfs.btrfs -L CRYPTROOT /dev/mapper/cryptroot
+  mkfs.btrfs --force -L CRYPTROOT /dev/mapper/cryptroot
   unset LUKS_PASSPHRASE
 }
 
