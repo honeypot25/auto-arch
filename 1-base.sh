@@ -70,7 +70,8 @@ download_packages() {
     wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware lsof \
     cups{,-pdf} gutenprint foomatic-db-gutenprint-ppds system-config-printer cron bash-completion pkgstats arch-wiki-lite tlp acpid acpi acpi_call \
     pipewire{,-alsa,-pulse,-jack} pamixer xdg-{user-dirs,utils} pavucontrol \
-    zip unzip
+    zip unzip \
+    light
   # bluez bluez-utils
   # alsa-{utils,plugins,firmware}
 }
