@@ -114,7 +114,7 @@ btrfs_setup() {
   # Remount root with subvolumes
   for i in ${!subvols[*]}; do
     mkdir -p "/mnt${paths[$i]}"
-    mount -o noatime,nodiratime,space_cache=v2,compress=lzo:6,ssd,discard=async,subvol="${subvols[$i]}" \
+    mount -o noatime,space_cache=v2,compress=lzo:6,ssd,discard=async,subvol="${subvols[$i]}" \
       /dev/mapper/cryptroot "/mnt${paths[$i]}"
   done
 
@@ -126,7 +126,7 @@ btrfs_setup() {
 pacstrap_base() {
   echo -e "\nINSTALLING BASE PACKAGES..." && sleep 2
   pacstrap /mnt --needed base base-devel linux linux-firmware linux-headers \
-    intel-ucode btrfs-progs git vi nano dhcpcd man-db man-pages
+    intel-ucode git vi nano dhcpcd man-db man-pages btrfs-progs reflector
 }
 
 save_config

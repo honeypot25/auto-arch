@@ -4,19 +4,41 @@ source auto-arch/cfg
 
 timezone_and_localization() {
   echo -e "\nSETTING TIMEZONE AND LOCALIZATION..." && sleep 2
-  # timezone
-  timedatectl set-timezone "Europe/Rome"
+  
+  # Timezone
+  #timedatectl set-timezone "Europe/Rome"
   ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
-  # locale
+  
+  # Clock
+  hwclock --systohc
+  #timedatectl set-ntp 1
+  #timedatectl set-local-rtc 0
+  
+  # Locales
   sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
   sed -i 's/^#it_IT.UTF-8 UTF-8/it_IT.UTF-8 UTF-8/' /etc/locale.gen
   locale-gen
-  localectl set-locale "LANG=en_US.UTF-8" "LC_TIME=it_IT.UTF-8" # LANG sets all LC_* if not set yet
-  # keymap
-  localectl set-keymap it
-  # clock
-  timedatectl set-ntp 1
-  timedatectl set-local-rtc 0
+  #localectl set-locale # LANG sets all LC_* if not set yet
+  {
+    echo LANG=en_US.UTF-8
+    echo LC_TIME=it_IT.UTF-8
+  } >/etc/locale.conf
+  
+  # Keyboard
+  #localectl set-keymap it
+  #localectl set-X11-keymap it
+  # VC Keymap
+  echo "KEYMAP=it" >/etc/vconsole.conf
+  # X11 Layout-Model-Options
+  {
+    echo Section \"InputClass\"
+    echo -e "\tIdentifier \"system-keyboard\""
+    echo -e "\tMatchIsKeyboard \"on\""
+    echo -e "\tOption \"XkbLayout\" \"it\""
+    echo -e "\tOption \"XkbModel\" \"pc105\"
+    echo -e "\tOption \"XkbOptions\" \"terminate:cltr_alt_bksp\"
+    echo EndSection
+  } >/etc/X11/xorg.conf.d/00-keyboard.conf
 }
 
 set_hostname() {
@@ -29,24 +51,24 @@ set_hostname() {
   } >/etc/hosts
 }
 
-#microcode_reload() {
-#}
+microcode_reload() {
+}
 
 download_packages() {
   echo -e "\nDOWNLOADING MAIN PACMAN PACKAGES..." && sleep 2
   sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
   sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
   sed -i 's/^#Color/Color/' /etc/pacman.conf
-  pacman -S --needed --noconfirm archlinux-keyring
+  pacman -Sy
 
   pacman -S --needed --noconfirm pacman-contrib
   chmod +r /etc/pacman.d/mirrorlist
-  #reflector -c Italy -a24 -n5 -f5 -l5 --sort rate --save /etc/pacman.d/mirrorlist
+  reflector -c Italy -a24 -n5 -f5 -l5 --sort rate --save /etc/pacman.d/mirrorlist
 
-  pacman -S --needed --noconfirm git efibootmgr grub grub-btrfs os-prober mtools dosfstools gvfs gvfs-smb nfs-utils ntfs-3g \
-    rsync rclone networkmanager network-manager-applet iw wireless_tools wpa_supplicant dhcpcd dialog nftables firewalld openssh keychain nss-mdns \
+  pacman -S --needed --noconfirm systemd efibootmgr grub grub-btrfs os-prober mtools dosfstools gvfs gvfs-smb nfs-utils ntfs-3g \
+    rsync rclone networkmanager network-manager-applet iw wireless_tools wpa_supplicant dialog nftables firewalld openssh keychain nss-mdns \
     wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware lsof \
-    cups{,-pdf} gutenprint foomatic-db-gutenprint-ppds system-config-printer cron bash-completion pkgstats arch-wiki-lite auto-cpufreq tlp acpid acpi acpi_call \
+    cups{,-pdf} gutenprint foomatic-db-gutenprint-ppds system-config-printer cron bash-completion pkgstats arch-wiki-lite tlp acpid acpi acpi_call \
     pipewire{,-alsa,-pulse,-jack} pamixer xdg-{user-dirs,utils} pavucontrol \
     zip unzip
   # bluez bluez-utils
@@ -79,7 +101,6 @@ enable_services() {
   echo -e "\nENABLING SYSTEM SERVICES..." && sleep 2
   # systemctl enable fstrim.timer # replaced by discard=async
   systemctl enable acpid
-  systemctl enable auto-cpufreq
   systemctl enable avahi-daemon
   systemctl enable cups
   systemctl enable dhcpcd
