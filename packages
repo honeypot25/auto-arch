@@ -52,7 +52,6 @@ pkgs=(
   "bitwarden"
   "bleachbit"
   "catfish"
-  "code"
   "ddgr"
   # "discord"
   "dunst"
@@ -70,7 +69,7 @@ pkgs=(
   "libmupdf"
   # "lxappearence"
   "mousepad"
-  "mpDris2"
+  #"mpDris2" # not-found
   "mpd"
   "mpv"
   # "mysql-workbench"
@@ -86,6 +85,7 @@ pkgs=(
   # "openresolv"
   # "opera"
   # "opera-ffmpeg-codecs"
+  "pandoc-bin"
   "papirus-icon-theme"
   "pdfarranger"
   "perl-rename"
@@ -121,6 +121,7 @@ pkgs=(
   "ttf-roboto-mono"
   "upower"
   "vim"
+  "visual-studio-code-bin"
   "xdg-ninja"
   "youtube-dl"
   # "zathura"
@@ -144,7 +145,7 @@ kfce_pkgs=(
 
 # i3
 i3_pkgs=(
-  "i3"
+  "i3-wm"
   "i3status"
   "nitrogen"
   "polybar"
