@@ -98,6 +98,7 @@ pkgs=(
   "rclone"
   # "realvnc-vnc-viewer"
   "ripgrep"
+  "shellcheck-bin"
   # "snapper"
   # "snap-pac"
   "speedtest-cli"
