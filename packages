@@ -69,7 +69,7 @@ pkgs=(
   "libmupdf"
   # "lxappearence"
   "mousepad"
-  #"mpDris2" # not-found
+  "mpdris2"
   "mpd"
   "mpv"
   # "mysql-workbench"
