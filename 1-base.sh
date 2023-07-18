@@ -4,26 +4,26 @@ source auto-arch/cfg
 
 timezone_and_localization() {
   echo -e "\nSETTING TIMEZONE AND LOCALIZATION..." && sleep 2
-  
+
   # Timezone
   #timedatectl set-timezone "Europe/Rome"
   ln -sf /usr/share/zoneinfo/Europe/Rome /etc/localtime
-  
+
   # Clock
   hwclock --systohc
   #timedatectl set-ntp 1
   #timedatectl set-local-rtc 0
-  
+
   # Locales
-  sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-  sed -i 's/^#it_IT.UTF-8 UTF-8/it_IT.UTF-8 UTF-8/' /etc/locale.gen
+  sed -Ei 's/^#(en_US.UTF-8 UTF-8)/\1/' /etc/locale.gen
+  sed -Ei 's/^#(it_IT.UTF-8 UTF-8)/\1/' /etc/locale.gen
   locale-gen
   #localectl set-locale # LANG sets all LC_* if not set yet
   {
     echo LANG=en_US.UTF-8
     echo LC_TIME=it_IT.UTF-8
   } >/etc/locale.conf
-  
+
   # Keyboard
   #localectl set-keymap it
   #localectl set-X11-keymap it
@@ -31,12 +31,12 @@ timezone_and_localization() {
   echo "KEYMAP=it" >/etc/vconsole.conf
   # X11 Layout-Model-Options
   {
-    echo Section \"InputClass\"
-    echo -e "\tIdentifier \"system-keyboard\""
-    echo -e "\tMatchIsKeyboard \"on\""
-    echo -e "\tOption \"XkbLayout\" \"it\""
-    echo -e "\tOption \"XkbModel\" \"pc105\"
-    echo -e "\tOption \"XkbOptions\" \"terminate:cltr_alt_bksp\"
+    echo 'Section "InputClass"'
+    printf '\tIdentifier "system-keyboard"\n'
+    printf '\ttMatchIsKeyboard "on"\n'
+    printf '\tOption "XkbLayout" "it"\n'
+    printf '\tOption "XkbModel" "pc105"\n'
+    printf '\tOption "XkbOptions" "terminate:cltr_alt_bksp"\n'
     echo EndSection
   } >/etc/X11/xorg.conf.d/00-keyboard.conf
 }
@@ -51,14 +51,11 @@ set_hostname() {
   } >/etc/hosts
 }
 
-microcode_reload() {
-}
-
 download_packages() {
   echo -e "\nDOWNLOADING MAIN PACMAN PACKAGES..." && sleep 2
-  sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
-  sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
-  sed -i 's/^#Color/Color/' /etc/pacman.conf
+  sed -Ei '/\[multilib\]/,/Include/ s/^#//' /etc/pacman.conf
+  sed -Ei 's/^#(ParallelDownloads)/\1/' /etc/pacman.conf
+  sed -Ei 's/^#(Color)/\1/' /etc/pacman.conf
   pacman -Sy
 
   pacman -S --needed --noconfirm pacman-contrib
@@ -79,10 +76,10 @@ download_packages() {
 btrfs_mkinitcpio() {
   echo -e "\nRUNNING mkinitcpio..." && sleep 2
   # MODULES=() ---> MODULES=(btrfs)
-  sed -i 's/MODULES=()/MODULES=(btrfs)/' /etc/mkinitcpio.conf
+  sed -Ei 's/^(MODULES=).*/\1\(btrfs\)/' /etc/mkinitcpio.conf
   # HOOKS=(... filesystems fsck) ---> HOOKS=(... encrypt filesystems)
   # no fsck for a btrfs root
-  sed -i 's/HOOKS=(.\+)/HOOKS=(base udev block autodetect keyboard keymap modconf encrypt filesystems)/' /etc/mkinitcpio.conf
+  sed -Ei 's/^(HOOKS=).*/\1\(base udev block autodetect keyboard keymap modconf encrypt filesystems\)/' /etc/mkinitcpio.conf
   mkinitcpio -P
 }
 
@@ -92,9 +89,9 @@ install_bootloader() {
   grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot --recheck --removable "$DISK"
   # LUKS root: GRUB_CMDLINE_LINUX_DEFAULT="... cryptdevice=UUID=$rootUUID:cryptroot root=/dev/mapper/cryptroot"
   rootUUID="$(blkid -s UUID -o value "${DISK}3")"
-  sed -i "s/^#\?GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT=\"cryptdevice=UUID=$rootUUID:cryptroot root=\/dev\/mapper\/cryptroot rootfstype=btrfs quiet splash vt.handoff=7\"/" /etc/default/grub
+  sed -Ei "s/^#?(GRUB_CMDLINE_LINUX_DEFAULT=).*/\1\"cryptdevice=UUID=$rootUUID:cryptroot root=\/dev\/mapper\/cryptroot rootfstype=btrfs quiet splash vt.handoff=7\"/" /etc/default/grub
   unset rootUUID
-  sed -i 's/^#\?GRUB_DISABLE_OS_PROBER=.*/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
+  sed -Ei 's/^#?(GRUB_DISABLE_OS_PROBER=).*/\1false/' /etc/default/grub
   grub-mkconfig -o /boot/grub/grub.cfg
 }
 
@@ -117,7 +114,7 @@ add_user() {
   useradd -m -G wheel -s /bin/bash "$MY_USERNAME"
   echo "$MY_USERNAME:$PASSWORD" | chpasswd
   # enable sudo rights
-  sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+  sed -Ei 's/^# (%wheel ALL=\(ALL:ALL\) ALL)/\1/' /etc/sudoers
   # echo -e "\n$MY_USERNAME ALL=(ALL:ALL) ALL" >>"/etc/sudoers.d/$MY_USERNAME"
   # sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
   # disable no-password sudo rights
