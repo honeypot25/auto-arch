@@ -50,6 +50,7 @@ wayland_pkgs=(
 ### Packages ###
 pkgs=(
   "alacritty"
+  "auto-cpufreq"
   "bfg"
   "bitwarden"
   "bleachbit"
@@ -61,7 +62,7 @@ pkgs=(
   "dunst"
   # "eog"
   "evince"
-  "exa"
+  "eza"
   "firefox"
   "flameshot"
   "gparted"

@@ -65,7 +65,7 @@ download_packages() {
   pacman -S --needed --noconfirm systemd efibootmgr grub grub-btrfs os-prober mtools dosfstools gvfs gvfs-smb nfs-utils ntfs-3g \
     rsync rclone networkmanager network-manager-applet iw wireless_tools wpa_supplicant dialog nftables firewalld openssh keychain nss-mdns \
     wget inetutils dnsutils ipset dmidecode avahi bind sof-firmware lsof \
-    cups{,-pdf} gutenprint foomatic-db-gutenprint-ppds system-config-printer cron bash-completion pkgstats arch-wiki-lite tlp acpid acpi acpi_call \
+    cups{,-pdf} gutenprint foomatic-db-gutenprint-ppds system-config-printer cron bash-completion pkgstats arch-wiki-lite acpid acpi acpi_call \
     pipewire{,-alsa,-pulse,-jack} pamixer xdg-{user-dirs,utils} pavucontrol \
     zip unzip \
     light
@@ -89,7 +89,7 @@ install_bootloader() {
   grub-install --target=x86_64-efi --boot-directory=/boot --efi-directory=/boot --recheck --removable "$DISK"
   # LUKS root: GRUB_CMDLINE_LINUX_DEFAULT="... cryptdevice=UUID=$rootUUID:cryptroot root=/dev/mapper/cryptroot"
   rootUUID="$(blkid -s UUID -o value "${DISK}3")"
-  sed -Ei "s/^#?(GRUB_CMDLINE_LINUX_DEFAULT=).*/\1\"cryptdevice=UUID=$rootUUID:cryptroot root=\/dev\/mapper\/cryptroot rootfstype=btrfs quiet splash vt.handoff=7\"/" /etc/default/grub
+  sed -Ei "s/^#?(GRUB_CMDLINE_LINUX_DEFAULT=).*/\1\"cryptdevice=UUID=$rootUUID:cryptroot root=\/dev\/mapper\/cryptroot rootfstype=btrfs quiet splash\"/" /etc/default/grub
   unset rootUUID
   sed -Ei 's/^#?(GRUB_DISABLE_OS_PROBER=).*/\1false/' /etc/default/grub
   grub-mkconfig -o /boot/grub/grub.cfg
@@ -106,7 +106,6 @@ enable_services() {
   systemctl enable NetworkManager
   systemctl enable reflector.timer
   systemctl enable sshd
-  systemctl enable tlp
 }
 
 add_user() {
